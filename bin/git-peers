@@ -22,7 +22,7 @@ reponame=$(git config remote.origin.url | sed "s/git@github\.com:[a-zA-Z0-9-]*\/
 if test -z "$peersfilename"; then
   echo 'PEERS file not found'
   echo 'Should contain one github username per line'
-  return 1
+  exit
 fi
 
 peers=$(cat $peersfilename)
