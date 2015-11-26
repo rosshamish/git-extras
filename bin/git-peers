@@ -18,12 +18,14 @@ function current_branch() {
 
 peersfilename=$(ls | grep -i "peers")
 reponame=$(git config remote.origin.url | sed "s/git@github\.com:[a-zA-Z0-9-]*\/\([a-zA-Z0-9\-]*\)/\1/g")
-peers=$(cat $peersfilename)
 
-if test -z "$peers"; then
+if -z "$peersfilename"; then
   echo 'PEERS file not found'
   echo 'Should contain one github username per line'
+  return 1
 fi
+
+peers=$(cat $peersfilename)
 
 if test "$1" = "push"; then
   echo "Pushing to each peer"; echo "";
