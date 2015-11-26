@@ -23,6 +23,7 @@ peers=$(cat $peersfilename)
 if test -z "$peers"; then
   echo 'PEERS file not found'
   echo 'Should contain one github username per line'
+fi
 
 if test "$1" = "push"; then
   echo "Pushing to each peer"; echo "";
