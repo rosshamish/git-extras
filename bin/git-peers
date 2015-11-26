@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+function echocmd() { 
+  echo "\$ $@" ; "$@" ;
+}
+
+function remote_exists() {
+  if [[ $(git config remote.$1.url) ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+function current_branch() {
+  echo $(git rev-parse --abbrev-ref HEAD)
+}
+
+peersfilename="peers"
+reponame=$(git config remote.origin.url | sed "s/git@github\.com:[a-zA-Z0-9-]*\/\([a-zA-Z0-9\-]*\)/\1/g")
+peers=$(cat $peersfilename)
+
+if test "$1" = "push"; then
+  echo "Pushing to each peer"; echo "";
+  for peer in $peers; do
+    if ! remote_exists $peer; then
+      echocmd git remote add $peer git@github.com:$peer/$reponame
+    fi
+    echocmd git push $2 $peer $(current_branch)
+  done
+elif test "$1" = "pull"; then
+  echo "Pulling from each peer"; echo "";
+  for peer in $peers; do
+    if ! remote_exists $peer; then
+      echocmd git remote add $peer git@github.com:$peer/$reponame
+    fi
+    echocmd git pull $2 $peer $(current_branch)
+  done
+else
+  echo "Usage:"
+  echo "git peers push [--tags]"
+  echo "git peers pull [--rebase]"
+fi
