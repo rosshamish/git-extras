@@ -19,7 +19,7 @@ function current_branch() {
 peersfilename=$(ls | grep -i "peers")
 reponame=$(git config remote.origin.url | sed "s/git@github\.com:[a-zA-Z0-9-]*\/\([a-zA-Z0-9\-]*\)/\1/g")
 
-if -z "$peersfilename"; then
+if test -z "$peersfilename"; then
   echo 'PEERS file not found'
   echo 'Should contain one github username per line'
   return 1
